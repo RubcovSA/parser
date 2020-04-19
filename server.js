@@ -1,18 +1,18 @@
 const express = require('express')
-const {Writable, Readable, PassThrough} = require('stream')
 const request = require('request')
-// get links from config file
 const bodyParser = require('body-parser')
+const yaml_config = require('node-yaml-config');
+const config = yaml_config.load(__dirname + '/config/worker.yml')
 
 const app = express()
-const port = 3212
+const port = config.server.port
 
 app.use(bodyParser.json())
 
 app.post('/', (req, res) => {
     const range = req.body
     const {
-        from, to, url
+        from, to, url, delimiter
     } = range
     const options = {
         url,
@@ -27,7 +27,7 @@ app.post('/', (req, res) => {
     readable.on('data', (chunk) => {
         const line = chunk.toString('utf8')
         console.log(count++)
-        console.log(line.split(';'))
+        console.log(line.split(delimiter))
     });
 
     readable.on('end', () => res.send(200))

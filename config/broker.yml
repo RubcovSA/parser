@@ -1,0 +1,17 @@
+default:
+  server:
+    port: 9000
+  database:
+    host: 'localhost'
+    port: 27017
+  workers: ['http://localhost:3212']
+  shops:
+    - link: 'http://www.apodiscounter.de/partnerprogramme/krn.csv'
+      name: 'apodiscounter'
+      delimiter: ';'
+    - link: 'https://www.bodfeld-apotheke.de/kairion/itemfeed.txt'
+      name: 'bodfeld-apotheke'
+      delimiter: ';'
+development:
+test:
+production:

@@ -1,0 +1,9 @@
+default:
+  server:
+    port: 3212
+  database:
+    host: 'localhost'
+    port: 27017
+development:
+test:
+production:
