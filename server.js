@@ -4,6 +4,7 @@ const bodyParser = require('body-parser')
 const yaml_config = require('node-yaml-config');
 const config = yaml_config.load(__dirname + '/config/worker.yml')
 const csv = require('csvtojson')
+const db = require('./db')
 
 const app = express()
 const port = config.server.port
@@ -53,6 +54,7 @@ function parseLine(str, options) {
     })
         .fromString(str)
         .then((csvRow)=>{
-            console.log(csvRow.map(i => Object.values(i)))
+            const columns = csvRow.map(i => Object.values(i))
+            columns.forEach(column => db.hmset(column, (err, data) => {err && console.log(err) || console.log(data)}))
         })
 }
