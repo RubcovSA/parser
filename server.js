@@ -12,12 +12,12 @@ app.use(bodyParser.json())
 app.post('/', (req, res) => {
     const range = req.body
     const {
-        from, to, length, url
+        from, to, url
     } = range
     const options = {
         url,
         headers: {
-            'Range': `bytes=${from}-${to}/${length}`,
+            'Range': `bytes=${from}-${to}`,
         }
     }
     console.log(options)
@@ -28,17 +28,10 @@ app.post('/', (req, res) => {
         const line = chunk.toString('utf8')
         console.log(count++)
         console.log(line.split(';'))
-        // put into redis by link name
     });
 
-    readable.on('end', () => {
-        // writable.end();
-        res.send(200)
-    });
-    readable.on('error', () => {
-        // writable.end();
-        res.send(500)
-    });
+    readable.on('end', () => res.send(200))
+    readable.on('error', () => res.send(500))
 })
 
 app.listen(port, err => {
