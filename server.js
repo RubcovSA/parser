@@ -3,6 +3,7 @@ const request = require('request')
 const bodyParser = require('body-parser')
 const yaml_config = require('node-yaml-config');
 const config = yaml_config.load(__dirname + '/config/worker.yml')
+const csv = require('csvtojson')
 
 const app = express()
 const port = config.server.port
@@ -12,7 +13,7 @@ app.use(bodyParser.json())
 app.post('/', (req, res) => {
     const range = req.body
     const {
-        from, to, url, delimiter
+        from, to, url, options: csvOptions
     } = range
     const options = {
         url,
@@ -26,8 +27,8 @@ app.post('/', (req, res) => {
     let count = 0
     readable.on('data', (chunk) => {
         const line = chunk.toString('utf8')
+        parseLine(line, csvOptions)
         console.log(count++)
-        console.log(line.split(delimiter))
     });
 
     readable.on('end', () => res.send(200))
@@ -42,3 +43,16 @@ app.listen(port, err => {
     console.log(`server is listening on ${port}`)
 })
 
+
+function parseLine(str, options) {
+    console.log('oprions ', options)
+    return csv({
+        noheader: true,
+        ...options,
+        eol: options.eol === '\\n' && '\n' || options.eol
+    })
+        .fromString(str)
+        .then((csvRow)=>{
+            console.log(csvRow.map(i => Object.values(i)))
+        })
+}

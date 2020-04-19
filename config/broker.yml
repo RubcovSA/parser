@@ -9,9 +9,11 @@ default:
     - link: 'http://www.apodiscounter.de/partnerprogramme/krn.csv'
       name: 'apodiscounter'
       delimiter: ';'
+      eol: '\n'
     - link: 'https://www.bodfeld-apotheke.de/kairion/itemfeed.txt'
       name: 'bodfeld-apotheke'
       delimiter: ';'
+      eol: '\n'
 development:
 test:
 production:
